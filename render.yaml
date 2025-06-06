@@ -1,13 +1,10 @@
 ﻿services:
   - type: web
-    name: my-dotnet-api
-    runtime: dotnet
+    name: creatilink-api
+    runtime: docker
     repo: https://github.com/valentino2805/CreatiLink-platform
     branch: main
-    buildCommand: dotnet publish -c Release -o out
-    startCommand: dotnet out/CreatiLinkPlatform.API.dll
+    plan: free
     envVars:
       - key: ASPNETCORE_URLS
         value: http://0.0.0.0:10000
-      - key: DOTNET_RUNNING_IN_CONTAINER
-        value: true
