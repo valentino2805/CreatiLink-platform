@@ -119,3 +119,4 @@ C:\Users\valen\RiderProjects\CreatiLink-platform\CreatiLinkPlatform.API\obj\Debu
 C:\Users\valen\RiderProjects\CreatiLink-platform\CreatiLinkPlatform.API\obj\Debug\net8.0\CreatiLinkPlatform.API.pdb
 C:\Users\valen\RiderProjects\CreatiLink-platform\CreatiLinkPlatform.API\obj\Debug\net8.0\CreatiLinkPlatform.API.genruntimeconfig.cache
 C:\Users\valen\RiderProjects\CreatiLink-platform\CreatiLinkPlatform.API\obj\Debug\net8.0\ref\CreatiLinkPlatform.API.dll
+C:\Users\valen\RiderProjects\CreatiLink-platform\CreatiLinkPlatform.API\obj\Debug\net8.0\CreatiLinkPlatform.API.sourcelink.json
