@@ -113,4 +113,13 @@ public class ProjectsController(
         var resources = projects.Select(ProjectResourceFromEntityAssembler.ToResourceFromEntity);
         return Ok(resources);
     }
+    
+    [ApiController]
+    [Route("/")]
+    public class RootController : ControllerBase
+    {
+        [HttpGet]
+        public IActionResult Get() => Ok("🎉 CreatiLink API is running!");
+    }
+
 }
