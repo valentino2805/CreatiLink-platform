@@ -1,0 +1,6 @@
+@CreatiLink_platform_HostAddress = http://localhost:5173
+
+GET {{CreatiLink_platform_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
