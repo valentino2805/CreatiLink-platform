@@ -204,5 +204,6 @@ app.MapControllers();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 app.Urls.Clear();
 app.Urls.Add($"http://*:{port}");
+app.MapGet("/", () => "🚀 Backend funcionando en Railway!");
 
 app.Run();
