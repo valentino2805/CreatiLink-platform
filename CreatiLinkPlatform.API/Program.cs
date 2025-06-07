@@ -150,8 +150,14 @@ builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 
 
 
-var app = builder.Build();
 
+
+// 👇 Configura el puerto dinámico para Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://*:{port}");
+
+// Build app
+var app = builder.Build();
 
 
 // Ensure database is created
@@ -200,10 +206,4 @@ app.UseCors("AllowSpecificOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-app.Urls.Clear();
-app.Urls.Add($"http://*:{port}");
-app.MapGet("/", () => "🚀 Backend funcionando en Railway!");
-
 app.Run();
