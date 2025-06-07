@@ -96,7 +96,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
         builder.Entity<Project>().Property(p => p.Title).IsRequired().HasMaxLength(200);
         builder.Entity<Project>().Property(p => p.Description).IsRequired().HasMaxLength(1000);
-        builder.Entity<Project>().Property(p => p.Image).IsRequired().HasMaxLength(500);
+        builder.Entity<Project>().Property(p => p.Image).IsRequired().HasColumnType("longtext");
+
 
         builder.Entity<Project>().Property(p => p.Likes).IsRequired();
         builder.Entity<Project>().Property(p => p.Comments).IsRequired();

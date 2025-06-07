@@ -150,14 +150,8 @@ builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 
 
 
-
-
-// 👇 Configura el puerto dinámico para Railway
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-builder.WebHost.UseUrls($"http://*:{port}");
-
-// Build app
 var app = builder.Build();
+
 
 
 // Ensure database is created
