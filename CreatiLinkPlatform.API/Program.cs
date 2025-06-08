@@ -44,10 +44,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5175", "https://frontend-web-applications-production.up.railway.app")
                 .AllowAnyMethod()
-                .AllowAnyHeader());
+                .AllowAnyHeader()
+                .AllowCredentials()); // 👈 importante si usas autenticación o tokens
 });
+
 
 // Add Database Connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
