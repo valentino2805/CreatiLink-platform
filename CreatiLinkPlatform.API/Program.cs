@@ -44,7 +44,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5173","https://frontend-web-applications-production.up.railway.app")
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 });
@@ -153,6 +153,7 @@ builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 
 
 // 👇 Configura el puerto dinámico para Railway
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://*:{port}");
 
