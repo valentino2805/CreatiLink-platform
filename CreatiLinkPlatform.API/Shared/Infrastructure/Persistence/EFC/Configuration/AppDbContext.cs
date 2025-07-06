@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Text.Json;
+using CreatiLinkPlatform.ContractsManagement.Domain.Model.Aggregates;
 
 //using CreatiLinkPlatform.API.IAM.Domain.Model.Aggregates;
 using CreatiLinkPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
@@ -112,11 +113,37 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
         builder.Entity<Project>().Property(p => p.ProfileId).IsRequired();
 
-// ✅ Relación correcta con Profile
+//  Relación  con Profile
         builder.Entity<Project>()
             .HasOne(p => p.Profile)
             .WithMany()
             .HasForeignKey(p => p.ProfileId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        // ContractsManagement. Context
+        
+        builder.Entity<Contract>().ToTable("contracts");
+
+        builder.Entity<Contract>().HasKey(c => c.Id);
+        builder.Entity<Contract>().Property(c => c.Id).HasColumnName("contract_id").IsRequired().ValueGeneratedOnAdd();
+
+        builder.Entity<Contract>().Property(c => c.Price).IsRequired().HasColumnType("decimal(18,2)");
+        builder.Entity<Contract>().Property(c => c.Requirements).IsRequired().HasMaxLength(1000);
+        builder.Entity<Contract>().Property(c => c.DesignType).IsRequired().HasMaxLength(200);
+
+        // Relationship with ClientUser
+        builder.Entity<Contract>()
+            .HasOne<Users>(c => c.ClientUser)
+            .WithMany()
+            .HasForeignKey(c => c.ClientUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Contract>()
+            .HasOne<Users>(c => c.DesignerProfile)
+            .WithMany()
+            .HasForeignKey(c => c.DesignerProfileId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
+    
+    
 }

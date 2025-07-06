@@ -32,6 +32,12 @@ using CreatiLinkPlatform.API.Projects.Domain.Repositories;
 using CreatiLinkPlatform.API.Projects.Domain.Services;
 using CreatiLinkPlatform.API.Projects.Infrastructure.Persistence.Repositories;
 
+using CreatiLinkPlatform.ContractsManagement.Application.Internal.CommandServices;
+using CreatiLinkPlatform.ContractsManagement.Application.Internal.QueryServices;
+using CreatiLinkPlatform.ContractsManagement.Domain.Repositories;
+using CreatiLinkPlatform.ContractsManagement.Domain.Services;
+using CreatiLinkPlatform.ContractsManagement.Infrastructure.Persitence.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -136,6 +142,10 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectCommandService, ProjectCommandService>();
 builder.Services.AddScoped<IProjectQueryService, ProjectQueryService>();
 
+// ContractsManagement Bounded Context
+builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.AddScoped<IContractCommandService, ContractCommandService>();
+builder.Services.AddScoped<IContractQueryService, ContractQueryService>();
 
 
 

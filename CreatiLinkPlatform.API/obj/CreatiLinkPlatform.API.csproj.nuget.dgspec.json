@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\valen\\RiderProjects\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj": {}
+    "D:\\valen\\Descargas\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\valen\\RiderProjects\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj": {
+    "D:\\valen\\Descargas\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\valen\\RiderProjects\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
+        "projectUniqueName": "D:\\valen\\Descargas\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
         "projectName": "CreatiLinkPlatform.API",
-        "projectPath": "C:\\Users\\valen\\RiderProjects\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
+        "projectPath": "D:\\valen\\Descargas\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
         "packagesPath": "C:\\Users\\valen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\valen\\RiderProjects\\CreatiLink-platform\\CreatiLinkPlatform.API\\obj\\",
+        "outputPath": "D:\\valen\\Descargas\\CreatiLink-platform\\CreatiLinkPlatform.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\valen\\AppData\\Roaming\\NuGet\\NuGet.Config"
