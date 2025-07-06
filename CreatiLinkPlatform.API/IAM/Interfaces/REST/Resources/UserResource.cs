@@ -9,4 +9,5 @@ namespace CreatiLinkPlatform.API.IAM.Interfaces.REST.Resources;
 /// <param name="Username">
 /// The username of the user.
 /// </param>
-public record UserResource(int Id, string Email);
+public record UserResource(int Id, string Email, string Role);
+
