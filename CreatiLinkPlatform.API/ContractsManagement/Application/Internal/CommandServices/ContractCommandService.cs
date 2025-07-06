@@ -24,8 +24,8 @@ public class ContractCommandService(
     {
         // Validate ClientUserId and DesignerProfileId roles
         var clientUser = await userRepository.FindByIdAsync(command.ClientUserId);
-        if (clientUser == null || clientUser.Role.ToLower() != "cliente")
-            throw new InvalidOperationException("Invalid ClientUserId or user is not a 'cliente'.");
+        if (clientUser == null || clientUser.Role.ToLower() != "client")
+            throw new InvalidOperationException("Invalid ClientUserId or user is not a 'client'.");
 
         var designerProfile = await userRepository.FindByIdAsync(command.DesignerProfileId);
         if (designerProfile == null || designerProfile.Role.ToLower() != "profile")

@@ -19,9 +19,9 @@ public class UserCommandService(
     public async Task Handle(SignUpCommand command)
     {
         // Validar que el rol sea uno de los permitidos
-        var validRoles = new[] { "cliente", "profile" };
+        var validRoles = new[] { "client", "profile" };
         if (!validRoles.Contains(command.Role.ToLower()))
-            throw new Exception("Rol no válido. Debe ser 'cliente' o 'profile'.");
+            throw new Exception("Rol no válido. Debe ser 'client' o 'profile'.");
 
         if (userRepository.ExistsByEmail(command.Email))
             throw new Exception($"Email {command.Email} already exists");
