@@ -50,7 +50,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
-            policy.WithOrigins("http://localhost:5175", "https://frontend-web-applications-production.up.railway.app")
+            policy.WithOrigins("http://localhost:5173", "https://frontend-web-applications-production.up.railway.app")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()); // 👈 importante si usas autenticación o tokens
