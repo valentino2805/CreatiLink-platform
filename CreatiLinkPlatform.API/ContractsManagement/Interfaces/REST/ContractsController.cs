@@ -12,30 +12,26 @@ namespace CreatiLinkPlatform.ContractsManagement.Interfaces.REST;
 /// <summary>
 /// Controller for managing contracts
 /// </summary>
-/// <param name="contractCommandService">
-/// The contract command service
-/// </param>
-/// <param name="contractQueryService">
-/// The contract query service
-/// </param>
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("Contracts")]
-public class ContractsController(
-    IContractCommandService contractCommandService,
-    IContractQueryService contractQueryService
-    ) : ControllerBase
+public class ContractsController : ControllerBase
 {
+    private readonly IContractCommandService _contractCommandService;
+    private readonly IContractQueryService _contractQueryService;
+
+    public ContractsController(
+        IContractCommandService contractCommandService,
+        IContractQueryService contractQueryService)
+    {
+        _contractCommandService = contractCommandService;
+        _contractQueryService = contractQueryService;
+    }
+
     /// <summary>
     /// Create a new contract (User only)
     /// </summary>
-    /// <param name="resource">
-    /// The <see cref="CreateContractResource"/> resource to create
-    /// </param>
-    /// <returns>
-    /// The <see cref="ContractResource"/> resource created
-    /// </returns>
     [HttpPost]
     [SwaggerOperation(
         Summary = "Create a new contract",
@@ -45,25 +41,58 @@ public class ContractsController(
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The contract was not created")]
     public async Task<IActionResult> CreateContract([FromBody] CreateContractResource resource)
     {
-        var createContractCommand = CreateContractCommandResourceFromEntityAssembler.ToCommandFromResource(resource);
-        var contract = await contractCommandService.Handle(createContractCommand);
-        if (contract is null) return BadRequest("Failed to create the contract. Please check the provided data.");
-        var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
-        return CreatedAtAction(nameof(GetContractById), new { contractId = contract.Id }, contractResource);
-    }
+        if (resource == null)
+        {
+            return BadRequest("Request body is null or improperly formatted.");
+        }
 
+        try
+        {
+            var createContractCommand = CreateContractCommandResourceFromEntityAssembler.ToCommandFromResource(resource);
+            var contract = await _contractCommandService.Handle(createContractCommand);
+            if (contract == null)
+            {
+                return BadRequest("Failed to create the contract. Please check the provided data.");
+            }
+
+            var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
+            return CreatedAtAction(nameof(GetContractById), new { contractId = contract.Id }, contractResource);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
+    }
+    /// <summary>
+    /// Get all contracts
+    /// </summary>
+    /// <returns>
+    /// A list of <see cref="ContractResource"/> resources
+    /// </returns>
+    [HttpGet]
+    [SwaggerOperation(
+        Summary = "Get all contracts",
+        Description = "Retrieve all contracts in the system",
+        OperationId = "GetAllContracts")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The contracts were found", typeof(IEnumerable<ContractResource>))]
+    public async Task<IActionResult> GetAllContracts()
+    {
+        try
+        {
+            var contracts = await _contractQueryService.Handle(new GetAllContractsQuery());
+            var contractResources = contracts.Select(ContractResourceFromEntityAssembler.ToResourceFromEntity);
+            return Ok(contractResources);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
+    }
     /// <summary>
     /// Update a contract (User and Profile)
     /// </summary>
-    /// <param name="contractId">
-    /// The id of the contract to update
-    /// </param>
-    /// <param name="resource">
-    /// The <see cref="UpdateContractResource"/> resource to update
-    /// </param>
-    /// <returns>
-    /// The updated <see cref="ContractResource"/> resource
-    /// </returns>
     [HttpPut("{contractId:int}")]
     [SwaggerOperation(
         Summary = "Update a contract",
@@ -73,22 +102,33 @@ public class ContractsController(
     [SwaggerResponse(StatusCodes.Status404NotFound, "The contract was not found")]
     public async Task<IActionResult> UpdateContract([FromRoute] int contractId, [FromBody] UpdateContractResource resource)
     {
-        var updateContractCommand = UpdateContractCommandResourceFromEntityAssembler.ToCommandFromResource(contractId, resource);
-        var contract = await contractCommandService.Handle(updateContractCommand);
-        if (contract is null) return NotFound("The contract was not found.");
-        var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
-        return Ok(contractResource);
+        if (resource == null)
+        {
+            return BadRequest("Request body is null or improperly formatted.");
+        }
+
+        try
+        {
+            var updateContractCommand = UpdateContractCommandResourceFromEntityAssembler.ToCommandFromResource(contractId, resource);
+            var contract = await _contractCommandService.Handle(updateContractCommand);
+            if (contract == null)
+            {
+                return NotFound("The contract was not found.");
+            }
+
+            var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
+            return Ok(contractResource);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
 
     /// <summary>
     /// Delete a contract (User and Profile)
     /// </summary>
-    /// <param name="contractId">
-    /// The id of the contract to delete
-    /// </param>
-    /// <returns>
-    /// A message indicating the contract was deleted
-    /// </returns>
     [HttpDelete("{contractId:int}")]
     [SwaggerOperation(
         Summary = "Delete a contract",
@@ -98,20 +138,22 @@ public class ContractsController(
     [SwaggerResponse(StatusCodes.Status404NotFound, "The contract was not found")]
     public async Task<IActionResult> DeleteContractById([FromRoute] int contractId)
     {
-        var deleteContractCommand = new DeleteContractCommand(contractId);
-        await contractCommandService.Handle(deleteContractCommand);
-        return Ok("The contract with the given id was successfully deleted.");
+        try
+        {
+            var deleteContractCommand = new DeleteContractCommand(contractId);
+            await _contractCommandService.Handle(deleteContractCommand);
+            return Ok("The contract with the given id was successfully deleted.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
 
     /// <summary>
     /// Get contract by id
     /// </summary>
-    /// <param name="contractId">
-    /// The id of the contract to get
-    /// </param>
-    /// <returns>
-    /// The <see cref="ContractResource"/> resource with the given id
-    /// </returns>
     [HttpGet("{contractId:int}")]
     [SwaggerOperation(
         Summary = "Get contract by id",
@@ -121,22 +163,28 @@ public class ContractsController(
     [SwaggerResponse(StatusCodes.Status404NotFound, "The contract was not found")]
     public async Task<IActionResult> GetContractById([FromRoute] int contractId)
     {
-        var getContractByIdQuery = new GetContractByIdQuery(contractId);
-        var contract = await contractQueryService.Handle(getContractByIdQuery);
-        if (contract is null) return NotFound();
-        var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
-        return Ok(contractResource);
+        try
+        {
+            var getContractByIdQuery = new GetContractByIdQuery(contractId);
+            var contract = await _contractQueryService.Handle(getContractByIdQuery);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+
+            var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
+            return Ok(contractResource);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
 
     /// <summary>
     /// Get contracts by user id
     /// </summary>
-    /// <param name="userId">
-    /// The id of the user to get contracts for
-    /// </param>
-    /// <returns>
-    /// The <see cref="ContractResource"/> resources for the given user id
-    /// </returns>
     [HttpGet("user/{userId:int}")]
     [SwaggerOperation(
         Summary = "Get contracts by user id",
@@ -146,9 +194,22 @@ public class ContractsController(
     [SwaggerResponse(StatusCodes.Status404NotFound, "The contracts were not found")]
     public async Task<IActionResult> GetContractsByUserId([FromRoute] int userId)
     {
-        var getAllContractsByUserIdQuery = new GetAllContractsByUserIdQuery(userId);
-        var contracts = await contractQueryService.Handle(getAllContractsByUserIdQuery);
-        var contractResources = contracts.Select(ContractResourceFromEntityAssembler.ToResourceFromEntity);
-        return Ok(contractResources);
+        try
+        {
+            var getAllContractsByUserIdQuery = new GetAllContractsByUserIdQuery(userId);
+            var contracts = await _contractQueryService.Handle(getAllContractsByUserIdQuery);
+            if (!contracts.Any())
+            {
+                return NotFound("No contracts found for the given user id.");
+            }
+
+            var contractResources = contracts.Select(ContractResourceFromEntityAssembler.ToResourceFromEntity);
+            return Ok(contractResources);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
 }

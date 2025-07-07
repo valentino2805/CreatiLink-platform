@@ -30,4 +30,10 @@ public class ContractQueryService(IContractRepository contractRepository) : ICon
     {
         return await contractRepository.FindContractsByDesignerProfileIdAsync(query.ProfileId);
     }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<Contract>> Handle(GetAllContractsQuery query)
+    {
+        return await contractRepository.FindAllContractsAsync();
+    }
 }

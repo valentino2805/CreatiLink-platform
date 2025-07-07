@@ -8,6 +8,7 @@ namespace CreatiLinkPlatform.ContractsManagement.Domain.Services;
 /// </summary>
 public interface IContractQueryService
 {
+    Task<IEnumerable<Contract>> Handle(GetAllContractsQuery query);
     /// <summary>
     /// Handle get all contracts by user id query
     /// </summary>
