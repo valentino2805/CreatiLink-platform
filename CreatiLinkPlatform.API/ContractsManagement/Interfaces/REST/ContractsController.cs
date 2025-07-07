@@ -5,6 +5,7 @@ using CreatiLinkPlatform.ContractsManagement.Domain.Services;
 using CreatiLinkPlatform.ContractsManagement.Interfaces.REST.Resources;
 using CreatiLinkPlatform.ContractsManagement.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace CreatiLinkPlatform.ContractsManagement.Interfaces.REST;
@@ -20,13 +21,16 @@ public class ContractsController : ControllerBase
 {
     private readonly IContractCommandService _contractCommandService;
     private readonly IContractQueryService _contractQueryService;
+    private readonly ILogger<ContractsController> _logger;
 
     public ContractsController(
         IContractCommandService contractCommandService,
-        IContractQueryService contractQueryService)
+        IContractQueryService contractQueryService,
+        ILogger<ContractsController> logger)
     {
         _contractCommandService = contractCommandService;
         _contractQueryService = contractQueryService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -43,33 +47,35 @@ public class ContractsController : ControllerBase
     {
         if (resource == null)
         {
+            _logger.LogWarning("CreateContract: Request body is null or improperly formatted.");
             return BadRequest("Request body is null or improperly formatted.");
         }
 
         try
         {
+            _logger.LogInformation("CreateContract: Processing request to create a new contract.");
             var createContractCommand = CreateContractCommandResourceFromEntityAssembler.ToCommandFromResource(resource);
             var contract = await _contractCommandService.Handle(createContractCommand);
             if (contract == null)
             {
+                _logger.LogWarning("CreateContract: Failed to create the contract. Provided data may be invalid.");
                 return BadRequest("Failed to create the contract. Please check the provided data.");
             }
 
             var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
+            _logger.LogInformation("CreateContract: Contract created successfully with ID {ContractId}.", contract.Id);
             return CreatedAtAction(nameof(GetContractById), new { contractId = contract.Id }, contractResource);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            _logger.LogError(ex, "CreateContract: An error occurred while processing the request.");
             return StatusCode(500, "An error occurred while processing your request.");
         }
     }
+
     /// <summary>
     /// Get all contracts
     /// </summary>
-    /// <returns>
-    /// A list of <see cref="ContractResource"/> resources
-    /// </returns>
     [HttpGet]
     [SwaggerOperation(
         Summary = "Get all contracts",
@@ -80,16 +86,19 @@ public class ContractsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("GetAllContracts: Retrieving all contracts.");
             var contracts = await _contractQueryService.Handle(new GetAllContractsQuery());
             var contractResources = contracts.Select(ContractResourceFromEntityAssembler.ToResourceFromEntity);
+            _logger.LogInformation("GetAllContracts: Successfully retrieved {Count} contracts.", contractResources.Count());
             return Ok(contractResources);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            _logger.LogError(ex, "GetAllContracts: An error occurred while retrieving contracts.");
             return StatusCode(500, "An error occurred while processing your request.");
         }
     }
+
     /// <summary>
     /// Update a contract (User and Profile)
     /// </summary>
@@ -104,24 +113,28 @@ public class ContractsController : ControllerBase
     {
         if (resource == null)
         {
+            _logger.LogWarning("UpdateContract: Request body is null or improperly formatted.");
             return BadRequest("Request body is null or improperly formatted.");
         }
 
         try
         {
+            _logger.LogInformation("UpdateContract: Processing request to update contract with ID {ContractId}.", contractId);
             var updateContractCommand = UpdateContractCommandResourceFromEntityAssembler.ToCommandFromResource(contractId, resource);
             var contract = await _contractCommandService.Handle(updateContractCommand);
             if (contract == null)
             {
+                _logger.LogWarning("UpdateContract: Contract with ID {ContractId} not found.", contractId);
                 return NotFound("The contract was not found.");
             }
 
             var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
+            _logger.LogInformation("UpdateContract: Contract with ID {ContractId} updated successfully.", contractId);
             return Ok(contractResource);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            _logger.LogError(ex, "UpdateContract: An error occurred while updating contract with ID {ContractId}.", contractId);
             return StatusCode(500, "An error occurred while processing your request.");
         }
     }
@@ -140,13 +153,15 @@ public class ContractsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("DeleteContractById: Processing request to delete contract with ID {ContractId}.", contractId);
             var deleteContractCommand = new DeleteContractCommand(contractId);
             await _contractCommandService.Handle(deleteContractCommand);
+            _logger.LogInformation("DeleteContractById: Contract with ID {ContractId} deleted successfully.", contractId);
             return Ok("The contract with the given id was successfully deleted.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            _logger.LogError(ex, "DeleteContractById: An error occurred while deleting contract with ID {ContractId}.", contractId);
             return StatusCode(500, "An error occurred while processing your request.");
         }
     }
@@ -165,19 +180,22 @@ public class ContractsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("GetContractById: Retrieving contract with ID {ContractId}.", contractId);
             var getContractByIdQuery = new GetContractByIdQuery(contractId);
             var contract = await _contractQueryService.Handle(getContractByIdQuery);
             if (contract == null)
             {
+                _logger.LogWarning("GetContractById: Contract with ID {ContractId} not found.", contractId);
                 return NotFound();
             }
 
             var contractResource = ContractResourceFromEntityAssembler.ToResourceFromEntity(contract);
+            _logger.LogInformation("GetContractById: Contract with ID {ContractId} retrieved successfully.", contractId);
             return Ok(contractResource);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            _logger.LogError(ex, "GetContractById: An error occurred while retrieving contract with ID {ContractId}.", contractId);
             return StatusCode(500, "An error occurred while processing your request.");
         }
     }
@@ -196,19 +214,22 @@ public class ContractsController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("GetContractsByUserId: Retrieving contracts for user ID {UserId}.", userId);
             var getAllContractsByUserIdQuery = new GetAllContractsByUserIdQuery(userId);
             var contracts = await _contractQueryService.Handle(getAllContractsByUserIdQuery);
             if (!contracts.Any())
             {
+                _logger.LogWarning("GetContractsByUserId: No contracts found for user ID {UserId}.", userId);
                 return NotFound("No contracts found for the given user id.");
             }
 
             var contractResources = contracts.Select(ContractResourceFromEntityAssembler.ToResourceFromEntity);
+            _logger.LogInformation("GetContractsByUserId: Successfully retrieved {Count} contracts for user ID {UserId}.", contractResources.Count(), userId);
             return Ok(contractResources);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            _logger.LogError(ex, "GetContractsByUserId: An error occurred while retrieving contracts for user ID {UserId}.", userId);
             return StatusCode(500, "An error occurred while processing your request.");
         }
     }
