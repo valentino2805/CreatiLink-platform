@@ -192,7 +192,7 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        context.Database.EnsureCreated();
+        context.Database.Migrate();
         Console.WriteLine("✅ Base de datos verificada o creada.");
     }
     catch (Exception ex)

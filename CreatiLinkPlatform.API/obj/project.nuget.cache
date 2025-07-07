@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "v7/By/Qgzwg=",
+  "dgSpecHash": "pqUs2iZ3CMw=",
   "success": true,
-  "projectFilePath": "D:\\valen\\Descargas\\CreatiLink-platform\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
+  "projectFilePath": "D:\\valen\\Descargas\\fa\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\valen\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
     "C:\\Users\\valen\\.nuget\\packages\\bouncycastle.cryptography\\2.3.1\\bouncycastle.cryptography.2.3.1.nupkg.sha512",

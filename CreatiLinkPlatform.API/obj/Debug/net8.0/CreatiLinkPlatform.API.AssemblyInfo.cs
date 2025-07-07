@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CreatiLinkPlatform.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29550c4742a342f0058ec80fddb77caf13f357eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b14f66e2b6a715a6ee55c03e73a859d1b1904b28")]
 [assembly: System.Reflection.AssemblyProductAttribute("CreatiLinkPlatform.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CreatiLinkPlatform.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
