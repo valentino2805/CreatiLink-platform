@@ -8431,11 +8431,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\valen\\Descargas\\fa\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
+      "projectUniqueName": "D:\\valen\\Descargas\\iambueno\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
       "projectName": "CreatiLinkPlatform.API",
-      "projectPath": "D:\\valen\\Descargas\\fa\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
+      "projectPath": "D:\\valen\\Descargas\\iambueno\\CreatiLinkPlatform.API\\CreatiLinkPlatform.API.csproj",
       "packagesPath": "C:\\Users\\valen\\.nuget\\packages\\",
-      "outputPath": "D:\\valen\\Descargas\\fa\\CreatiLinkPlatform.API\\obj\\",
+      "outputPath": "D:\\valen\\Descargas\\iambueno\\CreatiLinkPlatform.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\valen\\AppData\\Roaming\\NuGet\\NuGet.Config"
